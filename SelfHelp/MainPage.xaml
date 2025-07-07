@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SelfHelp.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+
+            <Label 
+                Text="Yoga Practices"
+                FontSize="24"
+                HorizontalOptions="Center"
+                FontAttributes="Bold" />
+
+            <Label Text="Enter Duration (minutes):" FontSize="18" />
+            <Entry x:Name="DurationEntry" Text="30"
+                   Placeholder="Enter duration"
+                   Keyboard="Numeric"
+                   HorizontalOptions="Fill" />
+
+            <Button Text="Daily Sadhana" CommandParameter="Daily Sadhana" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Isha Kriya" CommandParameter="Isha Kriya" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Aaum Namah shivaya" CommandParameter="AumNamahshivaya" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Aaum Chanting" CommandParameter="AumChanting" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Shambhavi" CommandParameter="Shambhavi" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Nadishudhi" CommandParameter="Nadi Shidhi" Clicked="OnPracticeMenuClicked" />
+            <Button Text="sukha Kriya" CommandParameter="Sukha Kriya" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Add New Timer" Clicked="OnAddTimerClicked"  />
+            <Button Text="📊 View Statistics"
+        Clicked="OnViewStatsClicked"
+        HorizontalOptions="Center"
+        FontSize="18"
+        Padding="10"/>
+
+            <Button Text="🎵 View Playlist"
+                Clicked="OnViewPlaylistClicked"
+                FontSize="16"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="10"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

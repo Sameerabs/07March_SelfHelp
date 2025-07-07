@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SelfHelp.NewTimerPage"
+             Title="Add New Timer">
+    <ScrollView>
+        <!-- 🔹 Added ScrollView to enable vertical scrolling -->
+        <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Timer Name:" FontSize="18"/>
+        <Entry x:Name="TimerNameEntry" Placeholder="Enter preset name" />
+
+        <Label Text="Interval Duration:" FontSize="18"/>
+        <HorizontalStackLayout Spacing="10">
+            <Entry x:Name="IntervalHours" Placeholder="H" Keyboard="Numeric" WidthRequest="50"/>
+            <Entry x:Name="IntervalMinutes" Placeholder="M" Keyboard="Numeric" WidthRequest="50"/>
+            <Entry x:Name="IntervalSeconds" Placeholder="S" Keyboard="Numeric" WidthRequest="50"/>
+        </HorizontalStackLayout>
+
+        <Label Text="Total Intervals:" FontSize="18"/>
+        <Entry x:Name="TotalIntervals" Placeholder="1-99" Keyboard="Numeric" TextChanged="OnTotalIntervalsChanged"/>
+
+        <Label Text="Gap Between Intervals:" FontSize="18"/>
+        <HorizontalStackLayout Spacing="10">
+            <Entry x:Name="GapHours" Placeholder="H" Keyboard="Numeric" WidthRequest="50" IsEnabled="False"/>
+            <Entry x:Name="GapMinutes" Placeholder="M" Keyboard="Numeric" WidthRequest="50" IsEnabled="False"/>
+            <Entry x:Name="GapSeconds" Placeholder="S" Keyboard="Numeric" WidthRequest="50" IsEnabled="False"/>
+        </HorizontalStackLayout>
+
+        <Button Text="Save Timer" Clicked="OnSaveClicked" />
+
+        <Label Text="Saved Timers:" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+        <!-- 🔹 List of saved timers -->
+        <ScrollView>
+            <VerticalStackLayout x:Name="TimerStackLayout" Spacing="10"/>
+        </ScrollView>
+            <!-- 🔹 External Control Buttons -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
+                <Button Text="⬆ Up" Clicked="OnMoveUpClicked"/>
+                <Button Text=" ⬇ Down" Clicked="OnMoveDownClicked"/>
+                <Button Text=" ❌ " BackgroundColor="Orange" TextColor="White" Clicked="OnDeleteClicked"/>
+            </HorizontalStackLayout>
+            <!-- 🔹 Play All Timers Button -->
+        <Button x:Name="PlayAllButton" Text="▶ Play All" Clicked="OnPlayAllClicked" IsVisible="False" />
+    </VerticalStackLayout>
+    </ScrollView>     <!-- 🔹 ScrollView wraps everything -->
+</ContentPage>

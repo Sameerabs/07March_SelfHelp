@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SelfHelp.YogaPlaylistPage"
+             Title="Yoga Playlist">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Header -->
+        <Label Text="Your Playlist" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+        <!-- Playlist Items with Fixed Height for Scrolling -->
+        <ScrollView HeightRequest="400" VerticalOptions="FillAndExpand">
+            <VerticalStackLayout x:Name="PlaylistStackLayout" Spacing="10"/>
+        </ScrollView>
+
+        <!-- Action Buttons -->
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
+            <Button Text="⬆ Up" Clicked="OnMoveUpClicked" />
+            <Button Text="⬇ Down" Clicked="OnMoveDownClicked" />
+            <Button Text="❌ Delete" Clicked="OnDeleteClicked" />
+        </HorizontalStackLayout>
+
+        <!-- Play All Button -->
+        <Button Text="▶ Play All" Clicked="OnPlayAllClicked" IsEnabled="False" x:Name="PlayAllButton"/>
+
+    </VerticalStackLayout>
+</ContentPage>
