@@ -145,7 +145,7 @@ namespace SelfHelp
             return sequence;
         }
 
-        public static List<AudioSequence> GetPracticeSequence(string practiceName)
+        public static List<AudioSequence>? GetPracticeSequence(string practiceName)
         {
             return _practiceSequences.TryGetValue(practiceName, out var sequence) ? sequence : null;
         }
