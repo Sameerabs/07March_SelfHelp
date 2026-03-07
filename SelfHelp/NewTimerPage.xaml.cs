@@ -48,7 +48,7 @@ namespace SelfHelp
 
             for (int i = 0; i < preset.TotalIntervals; i++)
             {
-                sequence.Add(new AudioSequence("IntervalBeep.mp3", preset.IntervalDuration, true));
+                sequence.Add(new AudioSequence("2Bells.mp3", preset.IntervalDuration, true));
 
                 if (i < preset.TotalIntervals - 1) // Add gap if not the last interval
                 {
@@ -59,6 +59,8 @@ namespace SelfHelp
             sequence.Add(new AudioSequence("EndChime.mp3", 0, false)); // Final chime
             return sequence;
         }
+
+
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
@@ -82,13 +84,18 @@ namespace SelfHelp
             if (!int.TryParse(GapHours.Text, out int gapH)) gapH = 0;
             if (!int.TryParse(GapMinutes.Text, out int gapM)) gapM = 0;
             if (!int.TryParse(GapSeconds.Text, out int gapS)) gapS = 0;
+            if (!int.TryParse(NumberOfCyclesEntry.Text, out int numberOfCycles) || numberOfCycles < 1 || numberOfCycles > 99)
+            {
+                numberOfCycles = 1; // Default to 1 if invalid input
+            }
 
             var newPreset = new TimerPreset
             {
                 Name = timerName,
                 IntervalDuration = (intervalH * 3600) + (intervalM * 60) + intervalS,
                 TotalIntervals = totalIntervals,
-                GapBetweenIntervals = (gapH * 3600) + (gapM * 60) + gapS
+                GapBetweenIntervals = (gapH * 3600) + (gapM * 60) + gapS,
+                NumberOfCycles = numberOfCycles
             };
 
             _timers.Add(newPreset);
@@ -126,7 +133,8 @@ namespace SelfHelp
                     new Label { Text = $"📌 {timer.Name}", FontSize = 18, FontAttributes = FontAttributes.Bold },
                     new Label { Text = $"⏳ Interval Duration: {TimeSpan.FromSeconds(timer.IntervalDuration):hh\\:mm\\:ss}" },
                     new Label { Text = $"🔁 Total Intervals: {timer.TotalIntervals}" },
-                    new Label { Text = $"⏸ Gap Between: {TimeSpan.FromSeconds(timer.GapBetweenIntervals):hh\\:mm\\:ss}" }
+                    new Label { Text = $"⏸ Gap Between: {TimeSpan.FromSeconds(timer.GapBetweenIntervals):hh\\:mm\\:ss}" },
+                    new Label { Text = $"🔄 Cycles: {timer.NumberOfCycles}" }
                 }
                     }
                 };
@@ -257,6 +265,7 @@ namespace SelfHelp
 
             return fullSequence;
         }
+
         private async void OnPlayAllClicked(object sender, EventArgs e)
         {
             if (_timers.Count == 0)

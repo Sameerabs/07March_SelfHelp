@@ -25,8 +25,9 @@
             <Entry x:Name="GapMinutes" Placeholder="M" Keyboard="Numeric" WidthRequest="50" IsEnabled="False"/>
             <Entry x:Name="GapSeconds" Placeholder="S" Keyboard="Numeric" WidthRequest="50" IsEnabled="False"/>
         </HorizontalStackLayout>
-
-        <Button Text="Save Timer" Clicked="OnSaveClicked" />
+            <Label Text="Number of Cycles:" FontSize="18"/>
+            <Entry x:Name="NumberOfCyclesEntry" Placeholder="e.g. 1-99" Keyboard="Numeric" />
+            <Button Text="Save Timer" Clicked="OnSaveClicked" />
 
         <Label Text="Saved Timers:" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
 

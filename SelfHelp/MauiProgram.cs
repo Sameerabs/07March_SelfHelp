@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microcharts.Maui; // ✅ Add Microcharts namespace
+//using Microcharts.Maui; // ✅ Add Microcharts namespace
 
 namespace SelfHelp
 {
@@ -10,7 +10,7 @@ namespace SelfHelp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMicrocharts() // ✅ Register Microcharts
+              //  .UseMicrocharts() // ✅ Register Microcharts
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

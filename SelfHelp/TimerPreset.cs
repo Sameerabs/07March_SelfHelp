@@ -9,6 +9,7 @@
         public int TotalIntervals { get; set; } // 1-99
 
         public int GapBetweenIntervals { get; set; } // In seconds
+        public int NumberOfCycles { get; set; } = 1;
     }
 }
 

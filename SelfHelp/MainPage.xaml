@@ -22,10 +22,11 @@
             <Button Text="Isha Kriya" CommandParameter="Isha Kriya" Clicked="OnPracticeMenuClicked" />
             <Button Text="Aaum Namah shivaya" CommandParameter="AumNamahshivaya" Clicked="OnPracticeMenuClicked" />
             <Button Text="Aaum Chanting" CommandParameter="AumChanting" Clicked="OnPracticeMenuClicked" />
+            <Button Text="Silence" CommandParameter="Silence" Clicked="OnPracticeMenuClicked" />
             <Button Text="Shambhavi" CommandParameter="Shambhavi" Clicked="OnPracticeMenuClicked" />
             <Button Text="Nadishudhi" CommandParameter="Nadi Shidhi" Clicked="OnPracticeMenuClicked" />
             <Button Text="sukha Kriya" CommandParameter="Sukha Kriya" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Add New Timer" Clicked="OnAddTimerClicked"  />
+            <Button Text="Timer Management" Clicked="OnAddTimerClicked"  />
             <Button Text="📊 View Statistics"
         Clicked="OnViewStatsClicked"
         HorizontalOptions="Center"

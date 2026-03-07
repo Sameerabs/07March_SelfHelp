@@ -9,7 +9,8 @@ namespace SelfHelp
             {
                 "Isha Kriya", new List<AudioSequence>
                 {
-                    new AudioSequence("IamNotTheBody.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
+                   new AudioSequence("IamNotTheBody.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
                     new AudioSequence("Isha_Kriya_End.mp3", loopDuration: 0, playerLoop: false)
                 }
             },
@@ -35,18 +36,33 @@ namespace SelfHelp
                 "Daily Sadhana",  GenerateDailySadhanaSequence()
 
             },
+
             {
                 "Nadi Shidhi", new List<AudioSequence>
                 {
-                    new AudioSequence("Nadishudhi.mp3", loopDuration: 0, playerLoop: false), 
+                     new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
+                   new AudioSequence("Nadishudhi.mp3", loopDuration: 0, playerLoop: false),
                     new AudioSequence("1Sec_Silence.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
                     new AudioSequence("LeftNastril_Stop.mp3", loopDuration: 0, playerLoop: false)
                 }
             },
+
+
+            {
+                "Silence", new List<AudioSequence>
+                {
+                    new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 2 min duration
+                    new AudioSequence("Bell1.mp3", loopDuration: 0, playerLoop: false),
+                    new AudioSequence("1Sec_Silence.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
+                    new AudioSequence("Bell1.mp3", loopDuration: 0, playerLoop: false),
+                }
+            },
+
+
             {
                 "Sukha Kriya", new List<AudioSequence>
                 {
-                    new AudioSequence("SukhaKriya.mp3", loopDuration: 0, playerLoop: false), 
+                    new AudioSequence("SukhaKriya.mp3", loopDuration: 0, playerLoop: false),
                     new AudioSequence("1Sec_Silence.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
                     new AudioSequence("LeftNastril_Stop.mp3", loopDuration: 0, playerLoop: false)
                 }
@@ -54,7 +70,9 @@ namespace SelfHelp
             {
                 "AumNamahshivaya", new List<AudioSequence>
                 {
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
                     new AudioSequence("Bell1.mp3", loopDuration: 0, playerLoop: false),
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 5, playerLoop: true), // Fixed 15 Seconds 
                     new AudioSequence("AumNamhShivaiah.mp3", loopDuration: -1, playerLoop: true), // Loop as per user input
                     new AudioSequence("Aum_Shanti.mp3", loopDuration: 0, playerLoop: false),
                 }
@@ -84,7 +102,7 @@ namespace SelfHelp
                     new AudioSequence("SukhaKriya.mp3", loopDuration: 0, playerLoop: false),
                     new AudioSequence("1Sec_Silence.mp3", loopDuration: 600, playerLoop: true), // Fixed 10 min duration
                     new AudioSequence("YogaMudra.mp3", loopDuration: 0, playerLoop: false),
-                    new AudioSequence("1Sec_Silence.mp3", loopDuration: 5, playerLoop: true), 
+                    new AudioSequence("1Sec_Silence.mp3", loopDuration: 5, playerLoop: true),
                     new AudioSequence("AumChanting_25ec.mp3", loopDuration: 900, playerLoop: false),
                     new AudioSequence("Vipareeta_swasa.mp3", loopDuration: 0, playerLoop: false),
                     new AudioSequence("1Sec_Silence.mp3", loopDuration: 300, playerLoop: true), // Fixed 10 min duration
@@ -137,7 +155,7 @@ namespace SelfHelp
     {
         public string FileName { get; }
         public int LoopDuration { get; } // -1 for user-defined duration
-        public bool PlayerLoop { set;  get; } // 
+        public bool PlayerLoop { set; get; } // 
 
         public AudioSequence(string fileName, int loopDuration, bool playerLoop)
         {
