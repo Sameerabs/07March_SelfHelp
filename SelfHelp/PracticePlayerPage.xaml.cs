@@ -1,20 +1,26 @@
 ﻿using Plugin.Maui.Audio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+
 
 namespace SelfHelp
 {
     public partial class PracticePlayerPage : ContentPage
     {
-        private IAudioPlayer _player;
+        private Stopwatch _globalStopwatch = new Stopwatch();
+        public string Date { get; set; }
+        public string Time { get; set; }
+        //  private IAudioPlayer _player;
         private bool _isStopping = false;
         private int _elapsedTime = 0;
-        private int _totalTime = 0;
+        private double _totalTime = 0;
         private List<AudioSequence> _sequence;
         private int _currentStep = 0;
         private string _practiceName;
         private int _userPracticeTime;
+        private double _currentItemTotalTime = 0;
 
         public PracticePlayerPage(string practiceName, int userInputMinutes)
         {
@@ -37,6 +43,7 @@ namespace SelfHelp
         {
             InitializeComponent();
             _sequence = sequence;
+            _practiceName = practiceName;
 
             PracticeTitle.Text = practiceName;
          //   _totalTime = _sequence.Sum(s => s.LoopDuration); // Calculate total time
@@ -46,9 +53,9 @@ namespace SelfHelp
             TotalTimeLabel.Text = $"Total Time: {TimeSpan.FromSeconds(_totalTime):hh\\:mm\\:ss}";
         }
 
-        private int CalculateTotalPracticeTime(List<AudioSequence> sequence, int userInputDuration)
+        private double CalculateTotalPracticeTime(List<AudioSequence> sequence, int userInputDuration)
         {
-            int totalTime = 0;
+            double totalTime = 0;
 
             foreach (var step in sequence)
             {
@@ -76,11 +83,45 @@ namespace SelfHelp
 
 
 
-
         private async void OnPlayClicked(object sender, EventArgs e)
         {
+            _globalStopwatch.Restart();
+            AudioPlayerService.Instance.Stop();
             _isStopping = false;
+
+            // 🔹 FIX: Reset BEFORE starting
+            _currentStep = 0;
+            _elapsedTime = 0;
+            ProgressSlider.Value = 0;
+            ElapsedTimeLabel.Text = "Elapsed Time: 00:00:00";
+
+            PlayButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
+
             await PlayPracticeSequence();
+
+            if (!_isStopping) // Only if user didn't stop manually
+            {
+                var session = new PracticeSession
+                {
+                    Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                    Time = DateTime.Now.ToString("HH:mm"),
+                    PracticeName = _practiceName,
+                    DurationMinutes = (int)Math.Round(_globalStopwatch.Elapsed.TotalMinutes),
+                    Completed = true
+                };
+
+                await PracticeStatsService.AddSessionAsync(session);
+            }
+
+            // 🔹 After sequence finishes
+            PlayButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
+
+            _currentStep = 0;
+            _elapsedTime = 0;
+            ProgressSlider.Value = 0;
+            ElapsedTimeLabel.Text = "Elapsed Time: 00:00:00";
         }
 
         private async Task PlayPracticeSequence()
@@ -91,7 +132,16 @@ namespace SelfHelp
 
                 var step = _sequence[_currentStep];
 
-                int loopTime;
+                string audioName = step.FileName
+                        .Replace(".mp3", "")
+                        .Replace("_", " ");
+
+                NowPlayingLabel.Text = $"{_practiceName} - {audioName}";
+
+
+                //NowPlayingLabel.Text = step.FileName;
+
+                double loopTime;
 
                 if (step.PlayerLoop && step.LoopDuration == -1)
                 {
@@ -107,20 +157,24 @@ namespace SelfHelp
                     loopTime = step.LoopDuration; // Use predefined dictionary duration
                 }
 
+                _currentItemTotalTime = loopTime;
                 await PlayAudio(step.FileName, loop: step.PlayerLoop, duration: loopTime);
+
+
+
+                CurrentItemTotalLabel.Text =
+                    $"Current Item Total: {TimeSpan.FromSeconds(loopTime):hh\\:mm\\:ss}";
             }
         }
 
 
-        private async Task PlayAudio(string fileName, bool loop, int duration)
+        private async Task PlayAudio(string fileName, bool loop, double duration)
         {
             try
             {
                 int tempTime = 0;
-                _player?.Stop();
-                _player?.Dispose();
 
-                // 🔹 Check if the file exists in the app package
+                // 🔹 Load audio file
                 using var stream = await FileSystem.OpenAppPackageFileAsync(fileName);
                 if (stream == null)
                 {
@@ -128,40 +182,37 @@ namespace SelfHelp
                     return;
                 }
 
-                // 🔹 Create and configure the audio player
-                _player = AudioManager.Current.CreatePlayer(stream);
-                _player.Loop = loop;
-                _player.Play();
+                // 🔹 Play using global service
+                await AudioPlayerService.Instance.PlayAsync(stream, loop);
 
-                if (!_player.IsPlaying)
+
+
+
+
+                var stopwatch = Stopwatch.StartNew();
+
+                while (AudioPlayerService.Instance.IsPlaying && !_isStopping)
                 {
-                    await DisplayAlert("Error", "Audio failed to play. Ensure file is in Resources/Raw", "OK");
-                    return;
-                }
+                    await Task.Delay(100); // 🔥 100ms precision
 
-                int elapsed = 0;
-                while (_player.IsPlaying && !_isStopping) // && elapsed < duration)
-                {
-                    await Task.Delay(1000);
-                    elapsed++;
-                    tempTime++;
-                    _elapsedTime++;
+                    double elapsed = stopwatch.Elapsed.TotalSeconds;
 
-
+                    tempTime = (int)elapsed;
+                    _elapsedTime = (int)_globalStopwatch.Elapsed.TotalSeconds;
 
                     ElapsedTimeLabel.Text = $"Elapsed Time: {TimeSpan.FromSeconds(_elapsedTime):hh\\:mm\\:ss}";
-                    TempTimeLabel.Text = $"Temp Time: {TimeSpan.FromSeconds(tempTime):hh\\:mm\\:ss}";
+                    ProgressSlider.Value = _globalStopwatch.Elapsed.TotalSeconds / _totalTime;
 
-                  //  TotalTimeLabel.Text = $"Total Time: {TimeSpan.FromSeconds(_totalTime):hh\\:mm\\:ss}";
+                    CurrentItemElapsedLabel.Text = 
+                        $"Current Item Elapsed: {TimeSpan.FromSeconds(elapsed):hh\\:mm\\:ss}";
 
-                    ProgressSlider.Value = (double)_elapsedTime / _totalTime;
-
-                    if (elapsed == duration && duration >0)
+                    if (elapsed >= duration && duration > 0)
                     {
-                        _player.Loop = false;
+                        AudioPlayerService.Instance.Stop();
+                        break;
                     }
-
                 }
+
             }
             catch (Exception ex)
             {
@@ -173,19 +224,51 @@ namespace SelfHelp
         private void OnPauseClicked(object sender, EventArgs e)
         {
             _isStopping = true;
-            _player?.Pause();
+            AudioPlayerService.Instance.Pause();
         }
 
-        private void OnStopClicked(object sender, EventArgs e)
+        private async void OnStopClicked(object sender, EventArgs e)
         {
             _isStopping = true;
-            _player?.Stop();
+
+            if (_globalStopwatch.Elapsed.TotalSeconds > 5) // avoid tiny sessions
+            {
+                var session = new PracticeSession
+                {
+                    Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                    Time = DateTime.Now.ToString("HH:mm"),
+                    PracticeName = _practiceName,
+                    DurationMinutes = (int)Math.Round(_globalStopwatch.Elapsed.TotalMinutes),
+                    Completed = false
+                };
+
+                await PracticeStatsService.AddSessionAsync(session);
+            }
+
+
+            AudioPlayerService.Instance.Stop();
+
             _elapsedTime = 0;
             _currentStep = 0;
+
             ProgressSlider.Value = 0;
-            ElapsedTimeLabel.Text = "Elapsed Time: 0:00";
+
+            ElapsedTimeLabel.Text = "Elapsed Time: 00:00:00";
+            CurrentItemElapsedLabel.Text = "Current Item Elapsed: 00:00";
+
+            PlayButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
+
+
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
 
+            // 🔴 Stop audio when leaving page
+            AudioPlayerService.Instance.Stop();
+        }
     }
+
 }

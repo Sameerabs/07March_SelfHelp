@@ -44,8 +44,12 @@ namespace SelfHelp
                         Spacing = 5,
                         Children =
                         {
-                            new Label { Text = $"📌 {practice.PracticeName}", FontSize = 18, FontAttributes = FontAttributes.Bold },
-                            new Label { Text = $"⏳ Duration: {practice.DurationMinutes} min" }
+                            new Label
+                            {
+                                Text = practice.DisplayText,
+                                FontSize = 18,
+                                FontAttributes = FontAttributes.Bold
+                            }
                         }
                     }
                 };
@@ -82,23 +86,70 @@ namespace SelfHelp
 
             List<AudioSequence> allSequences = new List<AudioSequence>();
 
-            foreach (var practice in _playlist)
+            foreach (var item in _playlist)
             {
-                var sequence = PracticeAudioMap.GetPracticeSequence(practice.PracticeName);
-                if (sequence != null)
+                // ---------- NORMAL PRACTICE ----------
+                if (item.Type == "Practice")
                 {
-                    foreach (var step in sequence)
+                    var sequence = PracticeAudioMap.GetPracticeSequence(item.PracticeName);
+
+                    if (sequence != null)
                     {
-                        // 🔹 If the practice allows user-defined duration, replace with user duration
-                        if (step.LoopDuration == -1)
+                        foreach (var step in sequence)
                         {
-                            allSequences.Add(new AudioSequence(step.FileName, practice.DurationMinutes * 60, step.PlayerLoop));
-                        }
-                        else
-                        {
-                            allSequences.Add(step); // Use predefined sequence
+                            if (step.LoopDuration == -1)
+                            {
+                                allSequences.Add(new AudioSequence(
+                                    step.FileName,
+                                    item.DurationMinutes * 60,
+                                    step.PlayerLoop,
+                                    item.PracticeName
+                                    ));
+                            }
+                            else
+                            {
+                                allSequences.Add(new AudioSequence(
+                                    step.FileName,
+                                    step.LoopDuration,
+                                    step.PlayerLoop,
+                                    item.PracticeName
+                                ));
+                            }
                         }
                     }
+                }
+
+                // ---------- CUSTOM PRACTICE ----------
+                else if (item.Type == "CustomPractice" && item.TimerPreset != null)
+                {
+                    var timer = item.TimerPreset;
+
+                    for (int i = 0; i < timer.TotalIntervals; i++)
+                    {
+                        // Interval
+                        allSequences.Add(new AudioSequence(
+                            "1Sec_Silence.mp3",
+                            timer.IntervalDuration,
+                            true,
+                            item.PracticeName
+                            ));
+
+                        // Gap
+                        if (i < timer.TotalIntervals - 1 && timer.GapBetweenIntervals > 0)
+                        {
+                            allSequences.Add(new AudioSequence(
+                                "1Sec_Silence.mp3",
+                                timer.GapBetweenIntervals,                                
+                                true, item.PracticeName
+                                ));
+                        }
+                    }
+
+                    // End bell
+                    allSequences.Add(new AudioSequence(
+                        "3Bells.mp3",
+                        0,
+                        false));
                 }
             }
 

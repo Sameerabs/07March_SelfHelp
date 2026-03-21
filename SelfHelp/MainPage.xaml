@@ -1,44 +1,275 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SelfHelp.MainPage">
+<ContentPage
+    x:Class="SelfHelp.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title=""
+    BackgroundColor="#0D1B2A">
 
+    <ContentPage.Resources>
+
+        <Style x:Key="PracticeButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#152233"/>
+            <Setter Property="TextColor" Value="#EAE6DC"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="HeightRequest" Value="80"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="BorderColor" Value="#1E3A52"/>
+            <Setter Property="BorderWidth" Value="1"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+        </Style>
+
+        <Style x:Key="PrimaryActionStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#C9A84C"/>
+            <Setter Property="TextColor" Value="#0D1B2A"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="HeightRequest" Value="52"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+        </Style>
+
+        <Style x:Key="SecondaryActionStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#1E3A52"/>
+            <Setter Property="TextColor" Value="#4A9E9E"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="HeightRequest" Value="52"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="BorderColor" Value="#2E5070"/>
+            <Setter Property="BorderWidth" Value="1"/>
+        </Style>
+
+        <Style x:Key="SectionLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="#C9A84C"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="CharacterSpacing" Value="2"/>
+        </Style>
+
+    </ContentPage.Resources>
     <ScrollView>
-        <VerticalStackLayout Padding="30,0" Spacing="25">
+        <VerticalStackLayout Spacing="0">
 
-            <Label 
-                Text="Yoga Practices"
-                FontSize="24"
-                HorizontalOptions="Center"
-                FontAttributes="Bold" />
+            <!-- ═══════════════════════════════════════ -->
+            <!--              HEADER HERO                -->
+            <!-- ═══════════════════════════════════════ -->
+            <VerticalStackLayout
+                BackgroundColor="#0D1B2A"
+                Padding="20,48,20,28"
+                Spacing="6">
 
-            <Label Text="Enter Duration (minutes):" FontSize="18" />
-            <Entry x:Name="DurationEntry" Text="30"
-                   Placeholder="Enter duration"
-                   Keyboard="Numeric"
-                   HorizontalOptions="Fill" />
+                <Label
+                    Text="✦  SADHANA  ✦"
+                    TextColor="#C9A84C"
+                    FontSize="11"
+                    CharacterSpacing="4"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
 
-            <Button Text="Daily Sadhana" CommandParameter="Daily Sadhana" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Isha Kriya" CommandParameter="Isha Kriya" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Aaum Namah shivaya" CommandParameter="AumNamahshivaya" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Aaum Chanting" CommandParameter="AumChanting" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Silence" CommandParameter="Silence" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Shambhavi" CommandParameter="Shambhavi" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Nadishudhi" CommandParameter="Nadi Shidhi" Clicked="OnPracticeMenuClicked" />
-            <Button Text="sukha Kriya" CommandParameter="Sukha Kriya" Clicked="OnPracticeMenuClicked" />
-            <Button Text="Timer Management" Clicked="OnAddTimerClicked"  />
-            <Button Text="📊 View Statistics"
-        Clicked="OnViewStatsClicked"
-        HorizontalOptions="Center"
-        FontSize="18"
-        Padding="10"/>
+                <Label
+                    Text="Yoga &amp; Meditation"
+                    TextColor="#EAE6DC"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"/>
 
-            <Button Text="🎵 View Playlist"
-                Clicked="OnViewPlaylistClicked"
-                FontSize="16"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="10"/>
+                <Label
+                    Text="Begin your practice"
+                    TextColor="#8A9BB0"
+                    FontSize="14"
+                    HorizontalOptions="Center"/>
+
+                <BoxView
+                    HeightRequest="2"
+                    WidthRequest="48"
+                    BackgroundColor="#C9A84C"
+                    HorizontalOptions="Center"
+                    Margin="0,8,0,0"/>
+
+            </VerticalStackLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--           DURATION INPUT CARD           -->
+            <!-- ═══════════════════════════════════════ -->
+            <Frame
+                Margin="20,8,20,0"
+                Padding="20,18"
+                BackgroundColor="#152233"
+                BorderColor="#1E3A52"
+                CornerRadius="18">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label
+                        Text="PRACTICE DURATION"
+                        Style="{StaticResource SectionLabelStyle}"/>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+
+                        <Entry
+                            x:Name="DurationEntry"
+                            Grid.Column="0"
+                            Placeholder="Minutes"
+                            PlaceholderColor="#4A6070"
+                            TextColor="#EAE6DC"
+                            BackgroundColor="#0D1B2A"
+                            Keyboard="Numeric"
+                            FontSize="18"
+                            HeightRequest="50"/>
+
+                        <Frame
+                            Grid.Column="1"
+                            BackgroundColor="#0D1B2A"
+                            BorderColor="#1E3A52"
+                            CornerRadius="12"
+                            Padding="14,0"
+                            HeightRequest="50"
+                            VerticalOptions="Center">
+                            <Label
+                                Text="min"
+                                TextColor="#8A9BB0"
+                                FontSize="14"
+                                VerticalOptions="Center"/>
+                        </Frame>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--           PRACTICES SECTION             -->
+            <!-- ═══════════════════════════════════════ -->
+            <VerticalStackLayout Margin="20,28,20,0" Spacing="16">
+
+                <Label
+                    Text="PRACTICES"
+                    Style="{StaticResource SectionLabelStyle}"/>
+
+                <ScrollView
+                    Orientation="Vertical"
+                    HeightRequest="220">
+
+                    <Grid
+                    ColumnDefinitions="*,*"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                    ColumnSpacing="12"
+                    RowSpacing="12">
+
+                        <Button
+                        Grid.Row="0" Grid.Column="0"
+                        Text="🧘 Isha Kriya"
+                        CommandParameter="Isha Kriya"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="0" Grid.Column="1"
+                        Text="🌬 Nadi Shudhi"
+                        CommandParameter="Nadi Shidhi"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="1" Grid.Column="0"
+                        Text="🌀 Sukha Kriya"
+                        CommandParameter="Sukha Kriya"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="1" Grid.Column="1"
+                        Text="🔱 Aum Namah&#10;Shivaya"
+                        CommandParameter="AumNamahshivaya"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="2" Grid.Column="0"
+                        Text="🕉 Aum&#10;Chanting"
+                        CommandParameter="AumChanting"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="2" Grid.Column="1"
+                        Text="👁 Shambhavi"
+                        CommandParameter="Shambhavi"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+                        Grid.Row="3" Grid.Column="0"
+                        Text="🤫 Silence"
+                        CommandParameter="Silence"
+                        Clicked="OnPracticeMenuClicked"
+                        Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+    Grid.Row="3" Grid.Column="1"
+    Text="👁 Open Your Eyes"
+    CommandParameter="Open Your Eyes"
+    Clicked="OnPracticeMenuClicked"
+    Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+    Grid.Row="4" Grid.Column="0"
+    Text="🕉 Punarapi"
+    CommandParameter="Punarapi"
+    Clicked="OnPracticeMenuClicked"
+    Style="{StaticResource PracticeButtonStyle}"/>
+
+                        <Button
+    Grid.Row="4" Grid.Column="1"
+    Text="🎶 Flute"
+    CommandParameter="Flute"
+    Clicked="OnPracticeMenuClicked"
+    Style="{StaticResource PracticeButtonStyle}"/>
+
+                    </Grid>
+
+                </ScrollView>
+
+            </VerticalStackLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--              DIVIDER                    -->
+            <!-- ═══════════════════════════════════════ -->
+            <BoxView
+                HeightRequest="1"
+                BackgroundColor="#1E3A52"
+                Margin="20,28,20,0"/>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--           TOOLS SECTION                 -->
+            <!-- ═══════════════════════════════════════ -->
+            <VerticalStackLayout Margin="20,24,20,0" Spacing="12">
+
+                <Label
+                    Text="TOOLS"
+                    Style="{StaticResource SectionLabelStyle}"/>
+
+                <Button
+                    Text="⏱  Create Custom Practice"
+                    Clicked="OnAddTimerClicked"
+                    Style="{StaticResource SecondaryActionStyle}"/>
+
+                <Button
+                    Text="▶  View Playlist"
+                    Clicked="OnViewPlaylistClicked"
+                    Style="{StaticResource SecondaryActionStyle}"/>
+
+                <Button
+                    Text="📊  View Practice History"
+                    Clicked="OnViewStatsClicked"
+                    Style="{StaticResource PrimaryActionStyle}"
+                    Margin="0,4,0,0"/>
+
+            </VerticalStackLayout>
+
+            <BoxView HeightRequest="40" BackgroundColor="Transparent"/>
+
         </VerticalStackLayout>
     </ScrollView>
 

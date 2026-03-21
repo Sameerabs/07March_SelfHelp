@@ -3,37 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SelfHelp.PracticePlayerPage"
              Title="PracticePlayerPage">
-    <VerticalStackLayout Padding="20" Spacing="15">
-        <Label x:Name="PracticeTitle" 
-               FontSize="24" 
-               FontAttributes="Bold" 
-               HorizontalOptions="Center" />
+    <VerticalStackLayout Padding="20" Spacing="10">
+    <Label x:Name="PlaylistTitle"
+       Text="Playlist Name"
+       FontSize="22"
+       FontAttributes="Bold"
+       HorizontalOptions="Center" />
+        <Label x:Name="PracticeTitle"
+           FontSize="22"
+           FontAttributes="Bold"
+           HorizontalOptions="Center"/>
 
-        <Label x:Name="ElapsedTimeLabel" 
-               Text="Elapsed Time: 00:00:00" 
-               FontSize="18" 
-               HorizontalOptions="Center" />
-        
-        <Label x:Name="TempTimeLabel" 
-               Text="Temp Time: 00:00:00" 
-               FontSize="18" 
-               HorizontalOptions="Center" />
-        <Label x:Name="TotalTimeLabel" 
-               Text="Total Time: 00:00:00" 
-               FontSize="18" 
-               HorizontalOptions="Center" />
+        <Label Text="Now Playing"
+           FontAttributes="Bold"/>
 
-        <Slider x:Name="ProgressSlider" 
-                Minimum="0" 
-                Maximum="1"
-                Value="0"
-                IsEnabled="False"
-                HorizontalOptions="FillAndExpand"/>
+        <Label x:Name="NowPlayingLabel"
+           FontSize="18"/>
 
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-            <Button Text="▶ Play" Clicked="OnPlayClicked" />
-            <!--<Button Text="⏸ Pause" Clicked="OnPauseClicked" />-->
-            <Button Text="⏹ Stop" Clicked="OnStopClicked" />
+        <Label x:Name="TotalTimeLabel"/>
+        <Label x:Name="ElapsedTimeLabel"/>
+        <Label x:Name="TempTimeLabel" />
+
+        <Label x:Name="CurrentItemTotalLabel"/>
+        <Label x:Name="CurrentItemElapsedLabel"/>
+
+        <Slider x:Name="ProgressSlider"
+            Minimum="0"
+            Maximum="1"/>
+
+        <HorizontalStackLayout Spacing="20">
+
+            <Button x:Name="PlayButton"
+                Text="Play"
+                Clicked="OnPlayClicked"/>
+
+            <Button x:Name="StopButton"  Text="⏹ Stop"  Clicked="OnStopClicked" IsEnabled="False" />
+
         </HorizontalStackLayout>
+
     </VerticalStackLayout>
 </ContentPage>

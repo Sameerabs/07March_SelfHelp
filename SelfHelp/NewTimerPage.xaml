@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SelfHelp.NewTimerPage"
-             Title="Add New Timer">
+             Title="Custom Practice">
     <ScrollView>
         <!-- 🔹 Added ScrollView to enable vertical scrolling -->
         <VerticalStackLayout Padding="20" Spacing="15">
@@ -27,7 +27,7 @@
         </HorizontalStackLayout>
             <Label Text="Number of Cycles:" FontSize="18"/>
             <Entry x:Name="NumberOfCyclesEntry" Placeholder="e.g. 1-99" Keyboard="Numeric" />
-            <Button Text="Save Timer" Clicked="OnSaveClicked" />
+            <Button Text="Add to Playlist" Clicked="OnSaveClicked" />
 
         <Label Text="Saved Timers:" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
 

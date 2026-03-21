@@ -14,6 +14,35 @@ namespace SelfHelp
                     new AudioSequence("Isha_Kriya_End.mp3", loopDuration: 0, playerLoop: false)
                 }
             },
+
+            {
+                "Open Your Eyes", new List<AudioSequence>
+                {
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
+                   new AudioSequence("Open_Your_Eyes.mp3", loopDuration: 0, playerLoop: false), // Loop as per user input
+                }
+            },
+            {
+                "Punarapi", new List<AudioSequence>
+                {
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
+                   new AudioSequence("Punarapi_Maranam.mp3", loopDuration: 0, playerLoop: false), // Loop as per user input
+                }
+            },
+            {
+                "Flute", new List<AudioSequence>
+                {
+                   new AudioSequence("1Sec_Silence.mp3", loopDuration: 15, playerLoop: true), // Fixed 15 Seconds 
+                   new AudioSequence("Peace_Flute.mp3", loopDuration: 0, playerLoop: false), // Loop as per user input
+                }
+            },
+
+
+
+
+
+
+
             {
                 "Daily Sadhana1", new List<AudioSequence>
                 {
@@ -151,18 +180,6 @@ namespace SelfHelp
         }
     }
 
-    public class AudioSequence
-    {
-        public string FileName { get; }
-        public int LoopDuration { get; } // -1 for user-defined duration
-        public bool PlayerLoop { set; get; } // 
 
-        public AudioSequence(string fileName, int loopDuration, bool playerLoop)
-        {
-            FileName = fileName;
-            LoopDuration = loopDuration;
-            PlayerLoop = playerLoop;
-        }
-    }
 
 }

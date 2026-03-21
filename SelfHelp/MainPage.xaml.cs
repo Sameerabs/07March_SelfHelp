@@ -8,6 +8,10 @@ namespace SelfHelp
         public MainPage()
         {
             InitializeComponent();
+            // Restore last entered duration
+            var lastDuration = Preferences.Get("last_duration_minutes", string.Empty);
+            if (!string.IsNullOrEmpty(lastDuration))
+                DurationEntry.Text = lastDuration;
         }
 
         private async void OnPracticeClicked(object sender, EventArgs e)
@@ -20,6 +24,7 @@ namespace SelfHelp
                 await DisplayAlert("Invalid Input", "Please enter a valid duration in minutes.", "OK");
                 return;
             }
+            Preferences.Set("last_duration_minutes", DurationEntry.Text);
 
             await Navigation.PushAsync(new PracticePlayerPage(practiceName, durationMinutes));
         }
@@ -38,6 +43,7 @@ namespace SelfHelp
                     return;
                 }
 
+                Preferences.Set("last_duration_minutes", DurationEntry.Text);
                 await Navigation.PushAsync(new PracticePlayerPage(practiceName, durationMinutes));
             }
 
@@ -66,10 +72,17 @@ namespace SelfHelp
             var playlist = await YogaPlaylistService.LoadPlaylistAsync();
 
             // 🔹 Add new practice with user-defined duration
-            playlist.Add(new PlaylistItem { PracticeName = practiceName, DurationMinutes = durationMinutes });
+            playlist.Add(new PlaylistItem
+            {
+                Type = "Practice",
+                PracticeName = practiceName,
+                DurationMinutes = durationMinutes
+            });
 
             // 🔹 Save the updated playlist
             await YogaPlaylistService.SavePlaylistAsync(playlist);
+
+            Preferences.Set("last_duration_minutes", DurationEntry.Text);
 
             await DisplayAlert("Added", $"{practiceName} ({durationMinutes} min) has been added to your playlist!", "OK");
         }

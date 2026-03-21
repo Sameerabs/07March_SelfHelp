@@ -94,13 +94,26 @@ namespace SelfHelp
                 Name = timerName,
                 IntervalDuration = (intervalH * 3600) + (intervalM * 60) + intervalS,
                 TotalIntervals = totalIntervals,
-                GapBetweenIntervals = (gapH * 3600) + (gapM * 60) + gapS,
-                NumberOfCycles = numberOfCycles
+                GapBetweenIntervals = (gapH * 3600) + (gapM * 60) + gapS
             };
 
             _timers.Add(newPreset);
+
             await _storageService.SaveTimersAsync(_timers);
-            await LoadTimersAsync(); // Refresh list after saving
+
+            // ADD CUSTOM PRACTICE TO PLAYLIST
+            var playlist = await YogaPlaylistService.LoadPlaylistAsync();
+
+            playlist.Add(new PlaylistItem
+            {
+                Type = "CustomPractice",
+                TimerPreset = newPreset
+            });
+
+            await YogaPlaylistService.SavePlaylistAsync(playlist);
+
+            await LoadTimersAsync();
+
         }
 
         private async Task LoadTimersAsync()
@@ -280,6 +293,29 @@ namespace SelfHelp
             // 🔹 Navigate to PracticePlayerPage with the full sequence
             await Navigation.PushAsync(new PracticePlayerPage("All Timers", allSequences));
         }
+
+
+        private async void OnAddToPlaylistClicked(object sender, EventArgs e)
+        {
+            if (_selectedIndex < 0 || _selectedIndex >= _timers.Count)
+            {
+                await DisplayAlert("Error", "Select a timer first", "OK");
+                return;
+            }
+
+            var playlist = await YogaPlaylistService.LoadPlaylistAsync();
+
+            playlist.Add(new PlaylistItem
+            {
+                Type = "CustomPractice",
+                TimerPreset = _timers[_selectedIndex]
+            });
+
+            await YogaPlaylistService.SavePlaylistAsync(playlist);
+
+            await DisplayAlert("Added", "Timer added to playlist", "OK");
+        }
+
 
 
 

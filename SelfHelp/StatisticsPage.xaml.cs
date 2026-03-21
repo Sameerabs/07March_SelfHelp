@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
@@ -10,42 +11,52 @@ namespace SelfHelp
 {
     public partial class StatisticsPage : ContentPage
     {
-        private List<PracticeSession> _sessionHistory = new List<PracticeSession>();
-        public ObservableCollection<PracticeSession> FilteredSessions { get; set; } = new ObservableCollection<PracticeSession>();
+        private List<PracticeSession> _sessionHistory = new();
+        public ObservableCollection<PracticeSession> FilteredSessions { get; set; } = new();
+
         public StatisticsPage()
         {
             InitializeComponent();
-            LoadPracticeData();
+            SessionListView.ItemsSource = FilteredSessions; // ✅ Set once
         }
 
-        private async void LoadPracticeData()
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await LoadPracticeData();
+        }
+
+        private async Task LoadPracticeData()
         {
             try
             {
-                // ✅ Load the embedded JSON file from the Raw folder
-                using var stream = await FileSystem.OpenAppPackageFileAsync("practice_stats.json");
-                using var reader = new StreamReader(stream);
-                string json = await reader.ReadToEndAsync();
+                string filePath = Path.Combine(FileSystem.AppDataDirectory, "practice_stats.json");
 
-                _sessionHistory = JsonSerializer.Deserialize<List<PracticeSession>>(json) ?? new List<PracticeSession>();
-
-
-
-                // Load all data initially
-                FilteredSessions.Clear();
-                foreach (var session in _sessionHistory)
+                if (!File.Exists(filePath))
                 {
-                    if (DateTime.TryParse(session.Date, out DateTime parsedDate))
-                    {
-                        session.Date = parsedDate.ToString("dd-MMM-yy");  // ✅ Format date properly
-                    }
+                    FilteredSessions.Clear();
+                    return;
+                }
+
+                string json = await File.ReadAllTextAsync(filePath);
+
+                _sessionHistory = JsonSerializer.Deserialize<List<PracticeSession>>(json)
+                                  ?? new List<PracticeSession>();
+
+                var sorted = _sessionHistory
+                    .OrderByDescending(s => DateTime.TryParse(s.Date, out var d) ? d : DateTime.MinValue)
+                    .ThenByDescending(s => s.Time)
+                    .ToList();
+
+                FilteredSessions.Clear();
+
+                foreach (var session in sorted)
+                {
                     FilteredSessions.Add(session);
                 }
 
-
-                // 🔹 Display Data in ListView
-                SessionListView.ItemsSource = null;
-                SessionListView.ItemsSource = FilteredSessions;
+                // 🔥 Ready for charts next step
+                GenerateInsights();
             }
             catch (Exception ex)
             {
@@ -53,14 +64,43 @@ namespace SelfHelp
             }
         }
 
-
-        public class PracticeSession
+        // 🔥 Prepare data for charts (next step)
+        private void GenerateInsights()
         {
-            public string Date { get; set; }
-            public string Time { get; set; }
-            public string PracticeName { get; set; }
-            public int DurationMinutes { get; set; }
-            public bool Completed { get; set; }
+            if (_sessionHistory == null || _sessionHistory.Count == 0)
+                return;
+
+            var daily = _sessionHistory
+                .GroupBy(s => s.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    TotalMinutes = g.Sum(x => x.DurationMinutes)
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            var mostPracticed = _sessionHistory
+                .GroupBy(s => s.PracticeName)
+                .Select(g => new
+                {
+                    Practice = g.Key,
+                    Count = g.Count()
+                })
+                .OrderByDescending(x => x.Count)
+                .ToList();
+
+            var timePerPractice = _sessionHistory
+                .GroupBy(s => s.PracticeName)
+                .Select(g => new
+                {
+                    Practice = g.Key,
+                    TotalMinutes = g.Sum(x => x.DurationMinutes)
+                })
+                .OrderByDescending(x => x.TotalMinutes)
+                .ToList();
+
+            // (Next step → bind these to charts)
         }
     }
 }
