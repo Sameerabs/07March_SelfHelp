@@ -18,34 +18,33 @@ namespace SelfHelp
         private double _totalTime = 0;
         private List<AudioSequence> _sequence;
         private int _currentStep = 0;
-        private string _practiceName;
+        private string _playlistName;
         private int _userPracticeTime;
-        private double _currentItemTotalTime = 0;
+        private string _currentPracticeName;
+        private double _currentItemTotalTime;
 
-        public PracticePlayerPage(string practiceName, int userInputMinutes)
+        public PracticePlayerPage(string playlistName, int userInputMinutes)
         {
             InitializeComponent();
-            _practiceName = practiceName;
-          //  _totalTime = userInputMinutes * 60; // Convert to seconds
+            _playlistName = playlistName;
 
-            PracticeTitle.Text = practiceName;
+            PlaylistTitle.Text = _playlistName;
 
-            _sequence = PracticeAudioMap.GetPracticeSequence(practiceName);
+            _sequence = PracticeAudioMap.GetPracticeSequence(playlistName);
 
             _totalTime = CalculateTotalPracticeTime(_sequence, userInputMinutes);
             TotalTimeLabel.Text = $"Total Time: {TimeSpan.FromSeconds(_totalTime):hh\\:mm\\:ss}";
-            //TotalTimeLabel.Text = $"Total Time: {TimeSpan.FromSeconds(_totalTime):mm\\:ss}";
             _userPracticeTime = userInputMinutes * 60; // Convert minutes to seconds
 
         }
 
-        public PracticePlayerPage(string practiceName, List<AudioSequence> sequence)
+        public PracticePlayerPage(string playlistName, List<AudioSequence> sequence)
         {
             InitializeComponent();
             _sequence = sequence;
-            _practiceName = practiceName;
+            _playlistName = playlistName;
 
-            PracticeTitle.Text = practiceName;
+            PlaylistTitle.Text = _playlistName;
          //   _totalTime = _sequence.Sum(s => s.LoopDuration); // Calculate total time
             _totalTime = CalculateTotalPracticeTime(_sequence, 0);
 
@@ -106,7 +105,7 @@ namespace SelfHelp
                 {
                     Date = DateTime.Now.ToString("yyyy-MM-dd"),
                     Time = DateTime.Now.ToString("HH:mm"),
-                    PracticeName = _practiceName,
+                    PracticeName = _playlistName,
                     DurationMinutes = (int)Math.Round(_globalStopwatch.Elapsed.TotalMinutes),
                     Completed = true
                 };
@@ -136,7 +135,13 @@ namespace SelfHelp
                         .Replace(".mp3", "")
                         .Replace("_", " ");
 
-                NowPlayingLabel.Text = $"{_practiceName} - {audioName}";
+                _currentPracticeName = step.PracticeName;
+
+                // 🔹 Set practice name
+                PracticeTitle.Text = _currentPracticeName;
+
+                // 🔹 Optional: show only step/audio
+                NowPlayingLabel.Text = audioName;
 
 
                 //NowPlayingLabel.Text = step.FileName;
@@ -237,7 +242,7 @@ namespace SelfHelp
                 {
                     Date = DateTime.Now.ToString("yyyy-MM-dd"),
                     Time = DateTime.Now.ToString("HH:mm"),
-                    PracticeName = _practiceName,
+                    PracticeName = _playlistName,
                     DurationMinutes = (int)Math.Round(_globalStopwatch.Elapsed.TotalMinutes),
                     Completed = false
                 };

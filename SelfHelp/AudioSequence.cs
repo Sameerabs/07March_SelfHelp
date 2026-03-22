@@ -12,16 +12,17 @@ namespace SelfHelp
         public int LoopDuration { get; }
         public bool PlayerLoop { get; set; }
 
-        public string SourceName { get; set; }   // NEW
         public string PracticeName { get; set; }
+        public string SourceName { get; set; }   // NEW
 
-        public AudioSequence(string fileName, int loopDuration, bool playerLoop, string sourceName = "", string practiceName = "")
+        public AudioSequence(string fileName, int loopDuration, bool playerLoop, string practiceName = "", string sourceName = "" )
         {
             FileName = fileName;
             LoopDuration = loopDuration;
             PlayerLoop = playerLoop;
-            SourceName = sourceName;
             PracticeName = practiceName;
+            SourceName = sourceName;
+
         }
     }
 }
